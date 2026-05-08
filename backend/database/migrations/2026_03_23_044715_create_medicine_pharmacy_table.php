@@ -1,0 +1,36 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
+    {
+        Schema::create('medicine_pharmacy', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('medicine_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('pharmacy_id')->constrained()->cascadeOnDelete();
+            $table->boolean('is_available')->default(true);
+            $table->unsignedInteger('quantity')->nullable();
+            $table->decimal('price', 10, 2)->nullable();
+            $table->string('notes')->nullable();
+            $table->foreignId('updated_by')->nullable()->constrained('users')->nullOnDelete();
+            $table->timestamps();
+
+            $table->unique(['medicine_id', 'pharmacy_id']);
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        Schema::dropIfExists('medicine_pharmacy');
+    }
+};
